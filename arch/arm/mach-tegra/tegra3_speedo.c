@@ -102,12 +102,16 @@ static const u32 cpu_process_speedos[][CPU_PROCESS_CORNERS_NUM] = {
 
 /* T33 family */
 	{295, 336, 358, 375, UINT_MAX},      /* [7]: cpu_speedo_id: 4: AP33 */
-	{295, 336, 358, 375, 391, UINT_MAX}, /* [10]: cpu_speedo_id: 7: T30L  */	
+#ifdef CONFIG_TF300T_OC
+	{295, 336, 358, 375, 391, UINT_MAX}, /* [10]: cpu_speedo_id: 7: T30L  */
+#else
+	{358, 358, 358, 358, 397, UINT_MAX}, /* [8]: cpu_speedo_id: 5: T33  */
+#endif
 	{364, 364, 364, 364, 397, UINT_MAX}, /* [9]: cpu_speedo_id: 6/12: T33S/AP37 */
 
 /* T30 'L' family */
-	{295, 336, 358, 375, 391, UINT_MAX}, /* [10]: cpu_speedo_id 7: T30L  */
 	{295, 336, 358, 375, 391, UINT_MAX}, /* [11]: cpu_speedo_id 8: T30SL */
+	{295, 336, 358, 375, 391, UINT_MAX}, /* [10]: cpu_speedo_id: 7: T30L  */
 
 /* T30 Automotives */
 	/* threshold_index 12: cpu_speedo_id 9 & 10
@@ -218,7 +222,9 @@ static void rev_sku_to_speedo_ids(int rev, int sku)
 			}
 			break;
 
-		case 0x83: /* T30L or T30S */	
+#ifdef CONFIG_TF300T_OC
+		case 0x83: /* T30L or T30S */
+#endif	
 		case 0x80: /* T33 or T33S */
 			switch (package_id) {
 			case 1: /* MID => T33 */
@@ -239,15 +245,16 @@ static void rev_sku_to_speedo_ids(int rev, int sku)
 			}
 			break;
 
-		/* case 0x83: /* T30L or T30S */
-		/*	switch (package_id) {
-		/*	case 1: /* MID => T30L */
-		/*		cpu_speedo_id = 7;
+#ifndef CONFIG_TF300T_OC
+		 case 0x83: /* T30L or T30S */
+			switch (package_id) {
+			case 1: /* MID => T30L */
+				cpu_speedo_id = 7;
 				soc_speedo_id = 1;
 				threshold_index = 10;
 				break;
 			case 2: /* DSC => T30S */
-		/*		cpu_speedo_id = 3;
+				cpu_speedo_id = 3;
 				soc_speedo_id = 2;
 				threshold_index = 3;
 				break;
@@ -257,7 +264,8 @@ static void rev_sku_to_speedo_ids(int rev, int sku)
 				BUG();
 				break;
 			}
-			break; */
+			break; 
+#endif
 
 		case 0x8F: /* T30SL */
 			cpu_speedo_id = 8;
@@ -555,7 +563,7 @@ int tegra_package_id(void)
  */
 static const int cpu_speedo_nominal_millivolts[] =
 /* speedo_id 0,    1,    2,    3,    4,    5,    6,    7,    8,   9,  10,  11,   12,    13,  14,  15 */
-	{ 1125, 1150, 1150, 1150, 1237, 1237, 1237, 1150, 1150, 1007, 916, 850, 1237, 1237, 950, 900};
+	{ 1125, 1150, 1150, 1150, 1237, 1250, 1237, 1150, 1150, 1007, 916, 850, 1237, 1237, 950, 900};
 
 int tegra_cpu_speedo_mv(void)
 {
