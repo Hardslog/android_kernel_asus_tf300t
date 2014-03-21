@@ -107,7 +107,7 @@ static const u32 cpu_process_speedos[][CPU_PROCESS_CORNERS_NUM] = {
 #else
 	{358, 358, 358, 358, 397, UINT_MAX}, /* [8]: cpu_speedo_id: 5: T33  */
 #endif
-	{325, 325, 358, 375, UINT_MAX}, /* [2]: cpu_speedo_id: 2: T30 */
+	{364, 364, 364, 364, 397, UINT_MAX}, /* [9]: cpu_speedo_id: 6/12: T33S/AP37 */
 
 /* T30 'L' family */
 	{295, 336, 358, 375, 391, UINT_MAX}, /* [11]: cpu_speedo_id 8: T30SL */
@@ -202,15 +202,15 @@ static void rev_sku_to_speedo_ids(int rev, int sku)
 			threshold_index = 1;
 			break;
 
-		/*case 0x81: /* T30 */
-		/*	switch (package_id) {
+		case 0x81: /* T30 */
+			switch (package_id) {
 			case 1: /* MID => T30 */
-		/*		cpu_speedo_id = 2;
+				cpu_speedo_id = 2;
 				soc_speedo_id = 2;
 				threshold_index = 2;
 				break;
 			case 2: /* DSC => AP33 */
-		/*		cpu_speedo_id = 4;
+				cpu_speedo_id = 4;
 				soc_speedo_id = 1;
 				threshold_index = 7;
 				break;
@@ -220,13 +220,12 @@ static void rev_sku_to_speedo_ids(int rev, int sku)
 				BUG();
 				break;
 			}
-			break;*/
+			break;
 
 #ifdef CONFIG_TF300T_OC
 		case 0x83: /* T30L or T30S */
 #endif	
 		case 0x80: /* T33 or T33S */
-		case 0x81: /* T30 */
 			switch (package_id) {
 			case 1: /* MID => T33 */
 				cpu_speedo_id = 5;
