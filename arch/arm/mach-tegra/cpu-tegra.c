@@ -167,7 +167,7 @@ static int gps_state_set(const char *arg, const struct kernel_param *kp)
 	int ret = 0;
 	static struct clk *c=NULL;
 	static int emc_min_rate=0;
-	#define MINMIAM_RATE (51000000)
+	#define MINMIAM_RATE (204000000)
 	if (c==NULL)
 		c=tegra_get_clock_by_name("emc");
 
@@ -367,9 +367,11 @@ static void edp_update_limit(void)
 	unsigned int i;
 	for (i = 0; freq_table[i].frequency != CPUFREQ_TABLE_END; i++) {
 #ifndef CONFIG_TF300T_OC
+#ifndef CONFIG_TF201T_OC
 	if (freq_table[i].frequency > limit) {
 		break;
 	}
+#endif
 #endif		
 	}
 	BUG_ON(i == 0);	/* min freq above the limit or table empty */
@@ -980,7 +982,7 @@ static int tegra_cpu_init(struct cpufreq_policy *policy)
 
 	if (policy->cpu == 0) {
 		/* set to 1.3GHz stock freq on init */
-		policy->max = 1400000;
+		policy->max = 1300000;
 		register_pm_notifier(&tegra_cpu_pm_notifier);
 	}
 

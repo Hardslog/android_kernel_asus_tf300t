@@ -104,6 +104,8 @@ static const u32 cpu_process_speedos[][CPU_PROCESS_CORNERS_NUM] = {
 	{295, 336, 358, 375, UINT_MAX},      /* [7]: cpu_speedo_id: 4: AP33 */
 #ifdef CONFIG_TF300T_OC
 	{295, 336, 358, 375, 391, UINT_MAX}, /* [10]: cpu_speedo_id: 7: T30L  */
+#elif CONFIG_TF201T_OC
+	{325, 325, 358, 375, UINT_MAX}, /* [2]: cpu_speedo_id 2: T30  */
 #else
 	{358, 358, 358, 358, 397, UINT_MAX}, /* [8]: cpu_speedo_id: 5: T33  */
 #endif
@@ -201,7 +203,7 @@ static void rev_sku_to_speedo_ids(int rev, int sku)
 			soc_speedo_id = 1;
 			threshold_index = 1;
 			break;
-
+#ifndef CONFIG_TF201T_OC
 		case 0x81: /* T30 */
 			switch (package_id) {
 			case 1: /* MID => T30 */
@@ -221,10 +223,14 @@ static void rev_sku_to_speedo_ids(int rev, int sku)
 				break;
 			}
 			break;
+#endif
 
 #ifdef CONFIG_TF300T_OC
 		case 0x83: /* T30L or T30S */
 #endif	
+#ifdef CONFIG_TF201T_OC
+		case 0x81: /* T30 */
+#endif
 		case 0x80: /* T33 or T33S */
 			switch (package_id) {
 			case 1: /* MID => T33 */
