@@ -368,9 +368,11 @@ static void edp_update_limit(void)
 	for (i = 0; freq_table[i].frequency != CPUFREQ_TABLE_END; i++) {
 #ifndef CONFIG_TF300T_OC
 #ifndef CONFIG_TF201T_OC
+#ifndef CONFIG_ME301T_OC
 	if (freq_table[i].frequency > limit) {
 		break;
 	}
+#endif
 #endif
 #endif		
 	}
